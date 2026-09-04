@@ -1,0 +1,27 @@
+EJERCICIO 2 
+        PROGRAMA: atletico
+        CONSTANTES 
+            hora=60min        
+            minuto=60seg
+            segundo=100centesimas
+        INPUT
+            distancia
+                txtInputDistancia
+            horas
+                txtInputHoras
+            minutos
+                txtInputMinutos
+            segundos
+                txtInputSegundos
+            centesimas
+                txtInputCentesimas
+
+        PROCESO:
+            BOTON
+                btnCalculo
+                    minutosAhora()
+                    velocidad=calculo(distancia,horas,minutos,segundos,cenmtesimas)
+                    horas= tiempoEnHora(minutos,segundos,cenmtesimas)
+                    velocidad=distancia/horas 
+                presentar resultado 
+    

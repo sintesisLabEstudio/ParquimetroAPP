@@ -1,0 +1,109 @@
+Trabajo en clases
+
+NOMBRES ALUMNOS	
+    Ignacio Gaete 
+    Jorge Vera 
+    
+ASIGNATURA	Taller de Nuevas Tecnologías
+PROFESOR	Roberto Cisterna Figueroa
+FECHA	03/09/2026	TIEMPO EJECUCIÓN	5 días 
+Martes 8 entrega
+10 sept evaluación 
+
+Instrucciones:
+    Deberá realizar los ejercicios indicados mediante código en lenguaje Kotlin 
+    en el tiempo indicado en grupos de hasta 3 personas. 
+        Cada ejercicio correcto posee un puntaje de 1 décima para la evaluación a realizar, 
+        y donde los puntos obtenidos no se sumarán para la siguiente evaluación.
+    
+    Ejercicios:
+        Los ejercicios que se presentarán a continuación deberá crearlos en 
+        un solo proyecto en el cual deba acceder a cada uno desde un menú.
+    
+    Ejercicio 1
+        Usted se debe estacionar en un parquímetro, el cual tiene la siguiente tarifa: 
+            De 0 a 25 minutos = $2850. 
+            El valor del minuto adicional es de $28. 
+            Genere un programa que calcule la cantidad de pesos (CLP) 
+            que debe cancelar al parquímetro por estar estacionado por 
+            N minutos, donde N debe ser ingresado por el usuario.
+            Al ingresar el valor, este no debe estar vacío.
+            Solo debe mostrar el último resultado ingresado.
+
+    Ejercicio 2 
+        En una competencia atlética de velocidad 
+            el tiempo se mide en minutos, segundos y centésimas de segundo 
+            y el espacio recorrido se mide en metros. 
+            Diseñe un programa para determinar 
+            la velocidad promedio de un atleta en km/hr. 
+            Considere que: 1 hora = 60 minutos, 1 minuto = 60 segundos, 1 segundo = 100 centésimas de segundo, 1 kilometro = 1000 metros. Todos los datos requeridos son ingresados por el usuario. Para calcular el promedio se divide la distancia (km) por el tiempo (hr).
+
+    Ejercicio 3
+        Hacer un programa en el cual:
+        -	Ingrese un número, el cual no puede estar vacío. 
+        -	Si el número ingresado es menor a 50, 
+                entonces se triplica,
+                en caso contrario, se divide por 4. 
+        -	El resultado se debe mostrar por pantalla.
+
+DESARROLLO 
+    EJERCICIO 1
+        PROGRAMA: parquimetro
+        constantes:
+            tarifa0a25=2850
+            minutoAdicional=28
+        INPUT:
+            tiempo //valida no vacio
+        PROCESO:
+            BOTON
+                btnCalculo
+                    totalPesos=calculo(tiempo)
+                    totalPesos=tarifa0a25+(tiempo*minutoAdicional)
+                    presenta 
+                    limpia el input
+        OUTPUT:
+            TEXTVIEW Y TOAST
+                txvTotal=totalPesos
+
+    EJERCICIO 2 
+        PROGRAMA: atletico
+        CONSTANTES 
+            hora=60min        
+            minuto=60seg
+            segundo=100centesimas
+        INPUT
+            distancia
+                txtInputDistancia
+            horas
+                txtInputHoras
+            minutos
+                txtInputMinutos
+            segundos
+                txtInputSegundos
+            centesimas
+                txtInputCentesimas
+
+        PROCESO:
+            BOTON
+                btnCalculo
+                    minutosAhora()
+                    velocidad=calculo(distancia,horas,minutos,segundos,cenmtesimas)
+                    horas= tiempoEnHora(minutos,segundos,cenmtesimas)
+                    velocidad=distancia/horas 
+                presentar resultado 
+    
+    EJERCICIO3 
+        PROGRAMA:  numero 
+        CONSTANTES:
+            maximo=50
+        INPUT:
+            txtInputNumero //valida no vacio 
+        PROCESO:
+            si txtInputNumero <maximo 
+                => total=3 X txtInputNumero
+            sino 
+                => total= txtInputNumero / 4
+        OUTPUT:
+            txtTotal = total 
+
+
