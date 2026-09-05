@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity2">
+
+    <Button
+        android:id="@+id/btnCalcula"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="38dp"
+        android:text="Calcular"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtInputHoras" />
+
+    <TextView
+        android:id="@+id/txvTituloPagar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Pago Total"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.485"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCalcula" />
+
+    <TextView
+        android:id="@+id/txvOutPago"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txvTituloPagar" />
+
+    <TextView
+        android:id="@+id/txvTituloTiempo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="41dp"
+        android:text="Tiempo Estacionado"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.512"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txvTituloApp" />
+
+    <TextView
+        android:id="@+id/txvTituloApp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="PARQUIMETRO"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/txtInputHoras"
+        android:layout_width="67dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="136dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="HORAS"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txvTituloTiempo" />
+
+    <EditText
+        android:id="@+id/txtInputMinutos"
+        android:layout_width="70dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginEnd="152dp"
+        android:ems="10"
+        android:hint="MINUTOS"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/txtInputHoras"
+        app:layout_constraintTop_toBottomOf="@+id/txvTituloTiempo" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
