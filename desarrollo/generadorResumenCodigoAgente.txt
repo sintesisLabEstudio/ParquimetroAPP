@@ -1,0 +1,12 @@
+genera un archivo de texto plano txt llamado resumenCodigoAclaraciones-V10-2708.txt
+en la raiz del sistema de la siguiente manera:
+    en este archivo incorporar todo el codigo clave del sistema ordenandolo
+    por:
+        nombre del archivo:, Descripcion:,Enlace a otros archvos:, codigo completo: (de cada archivo)
+            sin omitir nada e incorporando comentarios aclarativos de los bloques de codigo didacticamente....
+        para los archivos de sistema la misma estructura y si no es necesario no poner su codigo.
+        y agrega el dibujo de las pantallas de cada archivo .kt que ocupe un xml
+            presentando los nombres de los botones textos y nombres de las variables en esos objetos textview textEdit en el fondo es la pantalla que se vera en el celular.
+    INCORPORAR EN LA CABECERA DEL ARCHIVO:
+    funcionalidades: Describir todas las funcionalidades de este codigo de manera compacta completa pero sin omitir.  Y SIN OMITIR TAMBIEN LOS COMENTARIOS DE CODIGO EXPLICATIVOS QUA APARECEN EN EL CODIGO Y EL MISMO CODIGO COMENTADO QUE PUEDA APARECER
+

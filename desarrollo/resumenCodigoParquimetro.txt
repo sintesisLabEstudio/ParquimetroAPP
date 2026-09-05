@@ -1,0 +1,299 @@
+================================================================================
+RESUMEN TÉCNICO Y FUNCIONAL: SISTEMA DE PARQUÍMETRO ATLETICOCON NUMERO
+================================================================================
+
+FUNCIONALIDADES:
+- Cálculo automatizado de tarifa de parquímetro basado en tiempo real de estacionamiento (Horas y Minutos).
+- Conversión inteligente de tiempo a una unidad base única (minutos) para aplicar lógica de negocio.
+- Aplicación de tramos de cobro:
+    - Tramo Base: Cobro fijo de $2850 para estacionamientos de 1 a 25 minutos.
+    - Tramo Excedente: Cobro de $2850 más un adicional de $28 por cada minuto que supere los 25 minutos iniciales.
+- Interfaz de usuario intuitiva con campos de entrada numérica específicos para horas y minutos.
+- Sistema de retroalimentación mediante Toasts (mensajes emergentes) que informan el tiempo total en minutos y el monto final.
+- Visualización permanente del monto a cancelar en pantalla.
+- Diseño adaptativo para dispositivos móviles con soporte para barras de sistema dinámicas (Edge-to-Edge).
+
+--------------------------------------------------------------------------------
+ESQUEMA VISUAL DE LA PANTALLA (UI Layout)
+--------------------------------------------------------------------------------
+Archivo vinculante: activity_main.xml -> MainActivity.kt
+
+[         Barra de Estado del Celular           ]
+|                                               |
+|               PARQUIMETRO                     | <- id: txvTituloApp (TextView)
+|                                               |
+|            Tiempo Estacionado                 | <- id: txvTituloTiempo (TextView)
+|                                               |
+|      [ HORAS ]             [ MINUTOS ]        | <- id: txtInputHoras (EditText)
+|  (Variable: txtHoras)   (Variable: txtMinutos)|    id: txtInputMinutos (EditText)
+|                                               |
+|               [ CALCULAR ]                    | <- id: btnCalcula (Button)
+|                                               |
+|                Pago Total                     | <- id: txvTituloPagar (TextView)
+|                                               |
+|            DEBE CANCELAR: $...                | <- id: txvOutPago (TextView)
+|                                               |    (Variable: mensaje)
+|_______________________________________________|
+
+--------------------------------------------------------------------------------
+NOMBRE DEL ARCHIVO: MainActivity.kt
+--------------------------------------------------------------------------------
+Descripción: Es el controlador principal del sistema. Se encarga de capturar los datos de la interfaz, realizar los cálculos matemáticos siguiendo las reglas de negocio y presentar los resultados al usuario.
+Enlace a otros archivos: activity_main.xml (Layout), themes.xml (Estilo), AndroidManifest.xml (Registro).
+
+CÓDIGO COMPLETO:
+package com.example.apppuntosdecimas
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Habilita el diseño de borde a borde para usar toda la superficie de la pantalla
+        enableEdgeToEdge()
+
+        // Asocia esta clase con su diseño visual definido en el archivo XML
+        setContentView(R.layout.activity_main)
+
+        // Ajusta los márgenes para que los elementos no queden tapados por la muesca o barras del sistema
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        // --- DEFINICIÓN DE CONSTANTES DEL NEGOCIO ---
+        // Estas variables guardan los precios y tiempos definidos por la administración del parquímetro
+        // val tiempoEst = (horasEst/60) + minutosEst
+        val tarifaBase = 2850      // Costo fijo inicial
+        val maxMinutos = 25        // Límite del tramo base
+        val minAdd = 28            // Precio del minuto adicional
+        var pagoTotal = 0          // Variable acumuladora para el resultado final
+
+        // --- VINCULACIÓN DE COMPONENTES (ID a Variables) ---
+        // Conectamos las variables de código con los objetos definidos en el XML mediante sus IDs
+        val txtInputHoras = findViewById<EditText>(R.id.txtInputHoras)
+        val txtInputMinutos = findViewById<EditText>(R.id.txtInputMinutos)
+        val btnCalcula = findViewById<Button>(R.id.btnCalcula)
+        val outPago = findViewById<TextView>(R.id.txvOutPago)
+
+        // --- LÓGICA DEL BOTÓN CALCULAR ---
+        // Este bloque se ejecuta cada vez que el usuario presiona el botón "Calcular"
+        btnCalcula.setOnClickListener {
+
+            // --- FASE 1: CAPTURA DE DATOS ---
+            // Leemos lo que el usuario escribió en los campos de Horas y Minutos
+            val txtHoras = txtInputHoras.text.toString()
+            val txtMinutos = txtInputMinutos.text.toString()
+
+            // Notificamos al usuario los datos capturados para transparencia
+            Toast.makeText(this, "Horas: $txtHoras, Minutos: $txtMinutos", Toast.LENGTH_SHORT).show()
+
+            // --- FASE 2: PROCESAMIENTO (CÁLCULO) ---
+            // Convertimos el texto a número. Si está vacío, se asume 0 para evitar errores.
+            val hora = txtHoras.toIntOrNull() ?: 0
+            val minuto = txtMinutos.toIntOrNull() ?: 0
+
+            // Convertimos las horas a minutos y sumamos los minutos restantes
+            val tiempoMinutos = (hora * 60) + minuto
+            val txtTiempoMin = tiempoMinutos.toString()
+
+            // --- FASE 3: REGLAS DEL NEGOCIO (ALGORITMO DE COBRO) ---
+            if (tiempoMinutos > 0 && tiempoMinutos <= maxMinutos) {
+                // Si el tiempo es menor o igual a 25 minutos, se cobra solo la base
+                pagoTotal = tarifaBase
+            } else {
+                // Si excede los 25 minutos, se suma el costo adicional por cada minuto extra
+                pagoTotal = tarifaBase + (minAdd * (tiempoMinutos - maxMinutos))
+            }
+
+            // Formateamos el resultado final para ser mostrado
+            val txtPagar = pagoTotal.toString()
+            val mensaje = "DEBE CANCELAR: $" + txtPagar
+
+            // --- FASE 4: PRESENTACIÓN DE RESULTADOS ---
+            // Mostramos el tiempo total calculado en un mensaje flotante
+            Toast.makeText(this, "tiempo total en minutos: $txtTiempoMin", Toast.LENGTH_LONG).show()
+
+            // Mostramos el monto a pagar en un mensaje flotante
+            Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show()
+
+            // Actualizamos la etiqueta en pantalla con el resultado final
+            outPago.text = mensaje
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+NOMBRE DEL ARCHIVO: activity_main.xml
+--------------------------------------------------------------------------------
+Descripción: Define la estructura visual y los identificadores (IDs) de cada elemento de la interfaz de usuario.
+Enlace a otros archivos: MainActivity.kt (Controlador).
+
+CÓDIGO COMPLETO:
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!-- BOTÓN DE CÁLCULO PRINCIPAL -->
+    <Button
+        android:id="@+id/btnCalcula"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="38dp"
+        android:text="Calcular"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtInputHoras" />
+
+    <!-- ETIQUETA ESTATICA "Pago Total" -->
+    <TextView
+        android:id="@+id/txvTituloPagar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Pago Total"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.485"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCalcula" />
+
+    <!-- ETIQUETA DINÁMICA DE RESULTADO (Aquí se muestra el mensaje final) -->
+    <TextView
+        android:id="@+id/txvOutPago"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txvTituloPagar" />
+
+    <!-- ETIQUETA INFORMATIVA "Tiempo Estacionado" -->
+    <TextView
+        android:id="@+id/txvTituloTiempo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="41dp"
+        android:text="Tiempo Estacionado"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.512"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txvTituloApp" />
+
+    <!-- TÍTULO DE LA APLICACIÓN -->
+    <TextView
+        android:id="@+id/txvTituloApp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="PARQUIMETRO"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- CAMPO DE ENTRADA PARA HORAS -->
+    <EditText
+        android:id="@+id/txtInputHoras"
+        android:layout_width="67dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="136dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="HORAS"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txvTituloTiempo" />
+
+    <!-- CAMPO DE ENTRADA PARA MINUTOS -->
+    <EditText
+        android:id="@+id/txtInputMinutos"
+        android:layout_width="70dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginEnd="152dp"
+        android:ems="10"
+        android:hint="MINUTOS"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/txtInputHoras"
+        app:layout_constraintTop_toBottomOf="@+id/txvTituloTiempo" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+--------------------------------------------------------------------------------
+NOMBRE DEL ARCHIVO: themes.xml
+--------------------------------------------------------------------------------
+Descripción: Define los estilos visuales, colores y herencia de temas del sistema.
+Enlace a otros archivos: AndroidManifest.xml (donde se aplica el tema).
+
+CÓDIGO COMPLETO:
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tema basado en MaterialComponents para asegurar el diseño correcto de botones y campos -->
+    <style name="Theme.AppPuntosDecimas" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+</resources>
+
+--------------------------------------------------------------------------------
+NOMBRE DEL ARCHIVO: AndroidManifest.xml
+--------------------------------------------------------------------------------
+Descripción: Archivo esencial de configuración de Android que registra qué actividad debe ejecutarse primero y qué tema debe usar la aplicación.
+Enlace a otros archivos: MainActivity.kt (Actividad principal).
+
+CÓDIGO COMPLETO:
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppPuntosDecimas">
+
+        <!-- Registro de la Actividad Principal -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AppPuntosDecimas"
+            android:windowSoftInputMode="adjustResize">
+
+            <!-- Indica que esta actividad es la que aparece al abrir el icono de la app -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
+
+--------------------------------------------------------------------------------
+NOMBRE DEL ARCHIVO: strings.xml
+--------------------------------------------------------------------------------
+Descripción: Centraliza los textos estáticos del sistema para facilitar cambios o traducciones.
+Codigo Completo:
+<resources>
+    <string name="app_name">appPuntosDecimas</string>
+</resources>
